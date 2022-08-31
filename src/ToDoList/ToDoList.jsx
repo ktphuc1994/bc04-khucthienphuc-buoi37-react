@@ -24,7 +24,7 @@ import {
 class ToDoList extends Component {
   state = {
     completedList: [],
-    unCompletedList: [],
+    inCompletedList: [],
   };
   renderListOfToDo = (list) => {
     if (list.length !== 0)
@@ -101,8 +101,8 @@ class ToDoList extends Component {
     );
   };
   static getDerivedStateFromProps(props) {
-    console.log(props);
-    let completedList, unCompletedList;
+    // console.log(props);
+    let completedList, inCompletedList;
     if (props.isSearchOn) {
       let searchList = _.filter(props.toDoList, (task) => {
         let index = task.toDo
@@ -111,12 +111,12 @@ class ToDoList extends Component {
         return index !== -1;
       });
       completedList = searchList.filter((task) => task.status);
-      unCompletedList = searchList.filter((task) => !task.status);
+      inCompletedList = searchList.filter((task) => !task.status);
     } else {
       completedList = props.toDoList.filter((task) => task.status);
-      unCompletedList = props.toDoList.filter((task) => !task.status);
+      inCompletedList = props.toDoList.filter((task) => !task.status);
     }
-    return { completedList, unCompletedList };
+    return { completedList, inCompletedList };
   }
   render() {
     // let completedList, UnCompletedList;
@@ -127,6 +127,7 @@ class ToDoList extends Component {
     //   completedList = this.props.toDoList.filter((task) => task.status);
     //   UnCompletedList = this.props.toDoList.filter((task) => !task.status);
     // }
+    console.log("yues");
     return (
       <Container maxWidth="800px">
         <h1 style={{ fontSize: "2rem", textAlign: "center" }}>TO DO LIST</h1>
@@ -177,7 +178,7 @@ class ToDoList extends Component {
             <TrStyled bgColor={Color.gray400} textTranform="uppercase" fw="600">
               <td colSpan={4}>Uncompleted Task</td>
             </TrStyled>
-            {this.renderListOfToDo(this.state.unCompletedList)}
+            {this.renderListOfToDo(this.state.inCompletedList)}
             <TrStyled bgColor={Color.gray400} textTranform="uppercase" fw="600">
               <td colSpan={4}>Completed Task</td>
             </TrStyled>
