@@ -63,7 +63,7 @@ class ToDoForm extends Component {
                 />
               </FlexDiv>
               <div>
-                {this.props.editTaskId === null && (
+                {this.props.editTaskId === null ? (
                   <Button
                     type="button"
                     className="addToDoTask"
@@ -72,8 +72,7 @@ class ToDoForm extends Component {
                   >
                     Add Task
                   </Button>
-                )}
-                {this.props.editTaskId !== null && (
+                ) : (
                   <Button
                     type="button"
                     className="updateToDoTask"
