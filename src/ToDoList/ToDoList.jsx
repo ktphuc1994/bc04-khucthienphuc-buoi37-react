@@ -176,7 +176,7 @@ class ToDoList extends Component {
           </thead>
           <tbody>
             <TrStyled bgColor={Color.gray400} textTranform="uppercase" fw="600">
-              <td colSpan={4}>Uncompleted Task</td>
+              <td colSpan={4}>Incompleted Task</td>
             </TrStyled>
             {this.renderListOfToDo(this.state.inCompletedList)}
             <TrStyled bgColor={Color.gray400} textTranform="uppercase" fw="600">
