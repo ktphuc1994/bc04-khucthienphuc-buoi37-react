@@ -11,6 +11,8 @@ import {
   TOGGLE_COMPLETED_TASK,
   UPDATE_TASK,
   CLOSE_NOTIFY,
+  REMOVE_CONFIRM,
+  CLOSE_CONFIRM_FORM,
 } from "../constants/toDoAppConstant";
 
 export const getInputTask = (taksInfo) => {
@@ -20,17 +22,9 @@ export const getInputTask = (taksInfo) => {
   };
 };
 
-export const toggleAddTaskForm = () => {
-  return {
-    type: TOGGLE_ADD_TASK_FORM,
-  };
-};
+export const toggleAddTaskForm = () => ({ type: TOGGLE_ADD_TASK_FORM });
 
-export const addTask = () => {
-  return {
-    type: ADD_TASK,
-  };
-};
+export const addTask = () => ({ type: ADD_TASK });
 
 export const toggleCompletedTask = (id, status) => {
   return {
@@ -46,24 +40,16 @@ export const editTask = (taskInfo) => {
   };
 };
 
-export const updateTask = () => {
-  return {
-    type: UPDATE_TASK,
-  };
-};
+export const updateTask = () => ({ type: UPDATE_TASK });
 
-export const resetTask = () => {
-  return {
-    type: RESET_TASK,
-  };
-};
+export const resetTask = () => ({ type: RESET_TASK });
 
-export const removeTask = (id) => {
-  return {
-    type: REMOVE_TASK,
-    payload: id,
-  };
-};
+export const removeConfirm = (id) => ({
+  type: REMOVE_CONFIRM,
+  payload: id,
+});
+
+export const removeTask = () => ({ type: REMOVE_TASK });
 
 export const getInputFilter = (value) => {
   return {
@@ -77,3 +63,5 @@ export const filterTask = () => ({ type: SEARCH_TASK });
 export const resetFilter = () => ({ type: RESET_SEARCH });
 
 export const closeNotify = () => ({ type: CLOSE_NOTIFY });
+
+export const closeConfirmForm = () => ({ type: CLOSE_CONFIRM_FORM });

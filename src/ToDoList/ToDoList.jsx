@@ -5,7 +5,7 @@ import {
   editTask,
   filterTask,
   getInputFilter,
-  removeTask,
+  removeConfirm,
   resetFilter,
   toggleAddTaskForm,
   toggleCompletedTask,
@@ -37,7 +37,7 @@ class ToDoList extends Component {
                   <AwesomeI
                     className="fa-solid fa-circle-check"
                     fontSize="1.2rem"
-                    textColor="green"
+                    textColor={Color.green500}
                     cursor="pointer"
                     onClick={() => {
                       this.props.handleToggleCompletedTask(
@@ -86,7 +86,7 @@ class ToDoList extends Component {
                   fontSize="1.2rem"
                   cursor="pointer"
                   onClick={() => {
-                    this.props.handleRemoveTask(task.id);
+                    this.props.handleRemoveConfirm(task.id);
                   }}
                 ></AwesomeI>
               </td>
@@ -127,7 +127,6 @@ class ToDoList extends Component {
     //   completedList = this.props.toDoList.filter((task) => task.status);
     //   UnCompletedList = this.props.toDoList.filter((task) => !task.status);
     // }
-    console.log("yues");
     return (
       <Container maxWidth="800px">
         <h1 style={{ fontSize: "2rem", textAlign: "center" }}>TO DO LIST</h1>
@@ -140,6 +139,7 @@ class ToDoList extends Component {
               type="text"
               placeholder="Find task"
               focusSearch
+              value={this.props.searchText}
               onChange={this.props.handleGetInputFilter}
               onKeyUp={(e) => {
                 if (e.key === "Enter") {
@@ -194,6 +194,7 @@ const mapStateToProps = (state) => ({
   toDoList: state.toDoListReducer.toDoList,
   searchList: state.toDoListReducer.searchList,
   searchKey: state.toDoListReducer.searchKey,
+  searchText: state.toDoListReducer.searchText,
   isSearchOn: state.toDoListReducer.isSearchOn,
 });
 
@@ -218,8 +219,8 @@ const mapDispatchToProps = (dispatch) => {
     handleEditTask: (taskInfo) => {
       dispatch(editTask(taskInfo));
     },
-    handleRemoveTask: (id) => {
-      dispatch(removeTask(id));
+    handleRemoveConfirm: (id) => {
+      dispatch(removeConfirm(id));
     },
   };
 };

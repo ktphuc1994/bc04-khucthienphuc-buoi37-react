@@ -33,8 +33,25 @@ export const FlexDiv = styled.div`
   flex-direction: ${(props) => props.flexDirection || "column"};
   justify-content: ${(props) => props.justify || "flex-start"};
   align-items: ${(props) => props.alignItems || "stretch"};
-  margin: 10px 0;
+  margin: ${(props) => props.margin || "10px 0"};
+  padding: ${(props) => props.padding || "0"};
   z-index: ${(props) => props.zIndex || "auto"};
+`;
+
+export const NotifyDiv = styled.div`
+  position: fixed;
+  top: ${(props) => props.top || "65px"};
+  left: 50%;
+  transform: translate(
+    ${(props) => props.translateX || "-50%"},
+    ${(props) => props.translateY || "0"}
+  );
+  padding: ${(props) => props.padding || "15px 20px"};
+  border-radius: ${(props) => props.borderRadius || "0"};
+  background: ${(props) => props.bgColor || Color.gray800op95};
+  color: ${(props) => props.textColor || Color.gray50};
+  text-align: center;
+  z-index: 3;
 `;
 
 export const BackDrop = styled.div`
@@ -46,17 +63,6 @@ export const BackDrop = styled.div`
   background: ${(props) => props.bgColor || "gray"};
   opacity: 0.7;
   z-index: ${(props) => props.zIndex || "1"};
-`;
-
-export const NotifyDiv = styled.div`
-  position: fixed;
-  top: 65px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 10px 20px;
-  background: ${Color.gray800op95};
-  color: ${Color.gray50};
-  z-index: 3;
 `;
 
 export const Button = styled.button`

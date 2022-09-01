@@ -8,6 +8,8 @@ export let Color = {
   gray500: "#6b7280",
   gray700: "#4a5568",
   gray800: "#2d3748",
+  gray800op70: "rgba(45, 55, 72, 0.7)",
   gray800op95: "rgba(45, 55, 72, 0.95)",
   gray900: "#111827",
+  green500: "#48bb78",
 };

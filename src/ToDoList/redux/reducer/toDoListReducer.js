@@ -14,6 +14,8 @@ import {
   TOGGLE_COMPLETED_TASK,
   UPDATE_TASK,
   CLOSE_NOTIFY,
+  CLOSE_CONFIRM_FORM,
+  REMOVE_CONFIRM,
 } from "../constants/toDoAppConstant";
 
 const initialState = {
@@ -21,12 +23,14 @@ const initialState = {
   toDoList: [],
   isToDoFormOpened: false,
   editTaskId: null,
+  removeTaskId: null,
   searchText: "",
   searchKey: "",
-  searchList: [],
   isSearchOn: false,
-  notifyContent: "",
+  searchList: [],
   isNotifyOpened: false,
+  notifyContent: "",
+  isConfirmFormOpened: false,
 };
 
 const toDoListReducer = (state = initialState, { type, payload }) => {
@@ -47,6 +51,7 @@ const toDoListReducer = (state = initialState, { type, payload }) => {
       state.toDoList = [...state.toDoList];
       state.toDoTask = { ...initialToDoTask };
       state.isNotifyOpened = true;
+      state.notifyContent = "Task successfully added!";
       return { ...state };
     case RESET_TASK:
       state.toDoTask = { ...initialToDoTask };
@@ -70,14 +75,24 @@ const toDoListReducer = (state = initialState, { type, payload }) => {
       state.toDoList[index] = { ...state.toDoTask };
       state.toDoTask = { ...initialToDoTask };
       state.editTaskId = null;
+      state.isNotifyOpened = true;
+      state.notifyContent = "Task updated!";
       return { ...state, toDoList: [...state.toDoList] };
+    case REMOVE_CONFIRM:
+      state.isConfirmFormOpened = true;
+      state.removeTaskId = payload;
+      return { ...state };
+    case CLOSE_CONFIRM_FORM:
+      return { ...state, isConfirmFormOpened: false };
     case REMOVE_TASK:
-      index = _.findIndex(state.toDoList, ["id", payload]);
+      index = _.findIndex(state.toDoList, ["id", state.removeTaskId]);
       state.toDoList.splice(index, 1);
+      state.isNotifyOpened = true;
+      state.notifyContent = "Task removed!";
+      state.isConfirmFormOpened = false;
       return { ...state, toDoList: [...state.toDoList] };
     case GET_INPUT_SEARCH:
-      state.searchText = payload;
-      return state;
+      return { ...state, searchText: payload };
     case SEARCH_TASK:
       // state.searchList = _.filter(state.toDoList, (task) => {
       //   let index = task.toDo
@@ -90,10 +105,10 @@ const toDoListReducer = (state = initialState, { type, payload }) => {
       return { ...state };
     case RESET_SEARCH:
       state.isSearchOn = false;
+      state.searchText = "";
       return { ...state };
     case CLOSE_NOTIFY:
-      state.isNotifyOpened = false;
-      return { ...state };
+      return { ...state, isNotifyOpened: false };
     default:
       return state;
   }
