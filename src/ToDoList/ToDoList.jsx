@@ -3,10 +3,10 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import {
   editTask,
-  filterTask,
-  getInputFilter,
+  searchTask,
+  getInputSearch,
   removeConfirm,
-  resetFilter,
+  resetSearch,
   toggleAddTaskForm,
   toggleCompletedTask,
 } from "./redux/actions/toDoAppAction";
@@ -140,7 +140,7 @@ class ToDoList extends Component {
               placeholder="Find task"
               focusSearch
               value={this.props.searchText}
-              onChange={this.props.handleGetInputFilter}
+              onChange={this.props.handleGetInputSearch}
               onKeyUp={(e) => {
                 if (e.key === "Enter") {
                   e.preventDefault();
@@ -156,11 +156,11 @@ class ToDoList extends Component {
               right="10px"
               translateY="-50%"
               margin="0"
-              onClick={this.props.handleFilterTask}
+              onClick={this.props.handleSearchTask}
             ></AwesomeI>
           </div>
           {this.props.isSearchOn && (
-            <Button onClick={this.props.handleResetFilter} mx="5px">
+            <Button onClick={this.props.handleResetSearch} mx="5px">
               Reset
             </Button>
           )}
@@ -203,15 +203,15 @@ const mapDispatchToProps = (dispatch) => {
     handleToggleAddTaskForm: () => {
       dispatch(toggleAddTaskForm());
     },
-    handleGetInputFilter: (e) => {
+    handleGetInputSearch: (e) => {
       let value = e.target.value;
-      dispatch(getInputFilter(value));
+      dispatch(getInputSearch(value));
     },
-    handleFilterTask: () => {
-      dispatch(filterTask());
+    handleSearchTask: () => {
+      dispatch(searchTask());
     },
-    handleResetFilter: () => {
-      dispatch(resetFilter());
+    handleResetSearch: () => {
+      dispatch(resetSearch());
     },
     handleToggleCompletedTask: (id, status) => {
       dispatch(toggleCompletedTask(id, status));

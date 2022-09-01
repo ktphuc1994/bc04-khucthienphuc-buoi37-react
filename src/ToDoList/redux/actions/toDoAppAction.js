@@ -51,16 +51,16 @@ export const removeConfirm = (id) => ({
 
 export const removeTask = () => ({ type: REMOVE_TASK });
 
-export const getInputFilter = (value) => {
+export const getInputSearch = (value) => {
   return {
     type: GET_INPUT_SEARCH,
     payload: value,
   };
 };
 
-export const filterTask = () => ({ type: SEARCH_TASK });
+export const searchTask = () => ({ type: SEARCH_TASK });
 
-export const resetFilter = () => ({ type: RESET_SEARCH });
+export const resetSearch = () => ({ type: RESET_SEARCH });
 
 export const closeNotify = () => ({ type: CLOSE_NOTIFY });
 
