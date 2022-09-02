@@ -61,7 +61,7 @@ class ToDoList extends Component {
                 )}
               </td>
               <td>{task.time}</td>
-              <td>{task.toDo}</td>
+              <td>{task.task}</td>
               <td
                 style={{
                   display: "flex",
@@ -104,17 +104,17 @@ class ToDoList extends Component {
     // console.log(props);
     let completedList, inCompletedList;
     if (props.isSearchOn) {
-      let searchList = _.filter(props.toDoList, (task) => {
-        let index = task.toDo
+      let searchList = _.filter(props.toDoList, (taskInfo) => {
+        let index = taskInfo.task
           .toLowerCase()
           .indexOf(props.searchKey.toLowerCase());
         return index !== -1;
       });
-      completedList = searchList.filter((task) => task.status);
-      inCompletedList = searchList.filter((task) => !task.status);
+      completedList = searchList.filter((taskInfo) => taskInfo.status);
+      inCompletedList = searchList.filter((taskInfo) => !taskInfo.status);
     } else {
-      completedList = props.toDoList.filter((task) => task.status);
-      inCompletedList = props.toDoList.filter((task) => !task.status);
+      completedList = props.toDoList.filter((taskInfo) => taskInfo.status);
+      inCompletedList = props.toDoList.filter((taskInfo) => !taskInfo.status);
     }
     return { completedList, inCompletedList };
   }
@@ -195,7 +195,7 @@ const mapStateToProps = (state) => ({
   searchList: state.toDoListReducer.searchList,
   searchKey: state.toDoListReducer.searchKey,
   searchText: state.toDoListReducer.searchText,
-  isSearchOn: state.toDoListReducer.isSearchOn,
+  isSearchOn: state.toDoListReducer.modalControl.isSearchOn,
 });
 
 const mapDispatchToProps = (dispatch) => {

@@ -1,3 +1,4 @@
+import _ from "lodash";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import {
@@ -16,6 +17,15 @@ import {
 } from "./styledComponent/toDoStyled";
 
 class ToDoForm extends Component {
+  componentDidUpdate() {
+    if (this.props.isToDoFormOpened) {
+      _.forEach(this.props.errInputList, (value, key) => {
+        document.querySelector(`[data-error="${key}"]`).innerText =
+          value.errMessage;
+      });
+    }
+    // console.log(document.getElementById("thisTask"));
+  }
   render() {
     if (this.props.isToDoFormOpened)
       return (
@@ -24,7 +34,7 @@ class ToDoForm extends Component {
             <form>
               <FlexDiv>
                 <label htmlFor="toDoTime" style={{ fontWeight: 600 }}>
-                  Time
+                  TIME
                 </label>
                 <Input
                   type="text"
@@ -41,16 +51,17 @@ class ToDoForm extends Component {
                     }
                   }}
                 />
+                <p data-error="time" style={{ color: "red" }}></p>
               </FlexDiv>
-              <FlexDiv>
+              <FlexDiv margin="20px 0">
                 <label htmlFor="toDoTask" style={{ fontWeight: 600 }}>
-                  Task
+                  TASK
                 </label>
                 <Input
                   type="text"
                   id="toDoTask"
-                  name="toDo"
-                  value={this.props.toDoTask.toDo}
+                  name="task"
+                  value={this.props.toDoTask.task}
                   onChange={this.props.handleGetInputTask}
                   onKeyUp={(e) => {
                     if (e.key === "Enter") {
@@ -61,6 +72,7 @@ class ToDoForm extends Component {
                     }
                   }}
                 />
+                <p data-error="task" style={{ color: "red" }}></p>
               </FlexDiv>
               <div>
                 {this.props.editTaskId === null ? (
@@ -84,7 +96,7 @@ class ToDoForm extends Component {
                 )}
                 <Button
                   type="button"
-                  mx="5px"
+                  mx="10px"
                   solid
                   btnColor="gray"
                   onClick={this.props.handleResetTask}
@@ -108,8 +120,9 @@ class ToDoForm extends Component {
 
 const mapStateToProps = (state) => ({
   toDoTask: state.toDoListReducer.toDoTask,
-  isToDoFormOpened: state.toDoListReducer.isToDoFormOpened,
+  isToDoFormOpened: state.toDoListReducer.modalControl.isToDoFormOpened,
   editTaskId: state.toDoListReducer.editTaskId,
+  errInputList: state.toDoListReducer.errInputList,
 });
 
 const mapDispatchToProps = (dispatch) => {

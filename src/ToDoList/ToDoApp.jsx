@@ -19,8 +19,8 @@ class ToDoApp extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  isNotifyOpened: state.toDoListReducer.isNotifyOpened,
-  isConfirmFormOpened: state.toDoListReducer.isConfirmFormOpened,
+  isNotifyOpened: state.toDoListReducer.modalControl.isNotifyOpened,
+  isConfirmFormOpened: state.toDoListReducer.modalControl.isConfirmFormOpened,
 });
 
 export default connect(mapStateToProps, null)(ToDoApp);

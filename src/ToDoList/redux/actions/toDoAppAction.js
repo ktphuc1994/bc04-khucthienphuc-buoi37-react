@@ -1,3 +1,4 @@
+import { validation } from "../../validation/validator";
 import {
   ADD_TASK,
   EDIT_TASK,
@@ -15,10 +16,23 @@ import {
   CLOSE_CONFIRM_FORM,
 } from "../constants/toDoAppConstant";
 
-export const getInputTask = (taksInfo) => {
+let errMessage;
+
+// GET the Error Message from validator
+let getErrMessage = (message) => {
+  errMessage = message;
+};
+
+//CHECKING if the Input value is valid
+let checkInput = (name, value) =>
+  validation.checkEmpty(name, value, getErrMessage);
+// && validation.checkStringLength(name, value, 2, 50, getErrMessage);
+
+export const getInputTask = (taskInfo) => {
+  let isValid = checkInput(taskInfo.name, taskInfo.value);
   return {
     type: GET_INPUT_TASK,
-    payload: taksInfo,
+    payload: { ...taskInfo, isValid, errMessage },
   };
 };
 

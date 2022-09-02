@@ -1,6 +1,10 @@
 import _ from "lodash";
 import { nanoid } from "nanoid";
-import { initialToDoTask } from "../../utils";
+import {
+  initialInputErrList,
+  initialModalControl,
+  initialToDoTask,
+} from "../../utils";
 import {
   ADD_TASK,
   EDIT_TASK,
@@ -19,44 +23,80 @@ import {
 } from "../constants/toDoAppConstant";
 
 const initialState = {
+  modalControl: { ...initialModalControl },
   toDoTask: { ...initialToDoTask },
   toDoList: [],
-  isToDoFormOpened: false,
   editTaskId: null,
   removeTaskId: null,
   searchText: "",
   searchKey: "",
-  isSearchOn: false,
   searchList: [],
-  isNotifyOpened: false,
+  isNotifyAnErr: false,
   notifyContent: "",
-  isConfirmFormOpened: false,
+  errInputList: _.cloneDeep(initialInputErrList),
 };
 
 const toDoListReducer = (state = initialState, { type, payload }) => {
-  let index;
+  let index; // define index incase needed for findIndex;
+  let isTaskValid = true; // for Validating the Input Field (of Adding/Updating Task Form)
   switch (type) {
+    //START OPEN and CLOSE the Adding/Updating Task Form;
     case TOGGLE_ADD_TASK_FORM:
-      if (state.isToDoFormOpened) {
-        state.isToDoFormOpened = false;
+      if (state.modalControl.isToDoFormOpened) {
+        state.modalControl.isToDoFormOpened = false;
       } else {
-        state.isToDoFormOpened = true;
+        state.modalControl.isToDoFormOpened = true;
       }
       return { ...state };
+
+    //START GET the input value from Adding/Updating Task Form;
     case GET_INPUT_TASK:
-      state.toDoTask = { ...state.toDoTask, [payload.name]: payload.value };
+      let { value, name, isValid, errMessage } = payload;
+      state.errInputList[name] = { isValid, errMessage }; // Handle the error message (as validator detected)
+      state.toDoTask = { ...state.toDoTask, [name]: value };
       return { ...state };
+
+    // START ADDING task from Input From to Task List
     case ADD_TASK:
-      state.toDoList.push({ ...state.toDoTask, id: nanoid() });
-      state.toDoList = [...state.toDoList];
-      state.toDoTask = { ...initialToDoTask };
-      state.isNotifyOpened = true;
-      state.notifyContent = "Task successfully added!";
-      return { ...state };
+      _.forEach(state.errInputList, (value, key) => {
+        // CHECK the validity of each Input field (of Adding/Updating Task Form)
+        if (value.isValid) {
+          isTaskValid &= true;
+        } else if (value.errMessage === null) {
+          state.errInputList[
+            key
+          ].errMessage = `${key.toUpperCase()} cannot be empty`; // ASSIGN error Message if the Input field is Empty
+          isTaskValid &= false;
+        } else {
+          isTaskValid &= false;
+        }
+      });
+      if (isTaskValid) {
+        state.toDoList.push({ ...state.toDoTask, id: nanoid() });
+        state.toDoList = [...state.toDoList];
+        state.toDoTask = { ...initialToDoTask };
+        state.errInputList = _.cloneDeep(initialInputErrList);
+        state.modalControl.isNotifyOpened = true;
+        state.isNotifyAnErr = false;
+        state.notifyContent = "Task successfully added!";
+        return { ...state };
+      }
+      state.modalControl.isNotifyOpened = true;
+      state.isNotifyAnErr = true;
+      state.notifyContent = "Please check the Error Message";
+      return { ...state, errInputList: { ...state.errInputList } };
+
+    // START RESET the Input field of Adding/Updating Task Form;
     case RESET_TASK:
       state.toDoTask = { ...initialToDoTask };
+      state.errInputList = _.cloneDeep(initialInputErrList);
       state.editTaskId = null;
+      state.modalControl.isNotifyOpened = true;
+      state.isNotifyAnErr = false;
+      state.notifyContent = "Task Form Reset!";
       return { ...state };
+
+    // START TOGGLING the complete status of each task in Task List
     case TOGGLE_COMPLETED_TASK:
       index = _.findIndex(state.toDoList, ["id", payload.id]);
       if (payload.status) {
@@ -65,50 +105,94 @@ const toDoListReducer = (state = initialState, { type, payload }) => {
         state.toDoList[index].status = true;
       }
       return { ...state, toDoList: [...state.toDoList] };
+
+    // START HANDLING when click the Edit button (of each Task) in Task List
     case EDIT_TASK:
-      state.isToDoFormOpened = true;
+      state.modalControl.isToDoFormOpened = true;
       state.toDoTask = payload;
       state.editTaskId = payload.id;
+      _.forEach(state.errInputList, (value) => {
+        value.isValid = true;
+        value.errMessage = null;
+      });
       return { ...state };
+
+    // START UPDATING task from Input From to Task List
     case UPDATE_TASK:
-      index = _.findIndex(state.toDoList, ["id", state.editTaskId]);
-      state.toDoList[index] = { ...state.toDoTask };
-      state.toDoTask = { ...initialToDoTask };
-      state.editTaskId = null;
-      state.isNotifyOpened = true;
-      state.notifyContent = "Task updated!";
-      return { ...state, toDoList: [...state.toDoList] };
+      _.forEach(state.errInputList, (value, key) => {
+        // CHECK the validity of each Input field (of Adding/Updating Task Form)
+        if (value.isValid) {
+          isTaskValid &= true;
+        } else if (value.errMessage === null) {
+          state.errInputList[
+            key
+          ].errMessage = `${key.toUpperCase()} cannot be empty`; // ASSIGN error Message if the Input field is Empty
+          isTaskValid &= false;
+        } else {
+          isTaskValid &= false;
+        }
+      });
+      if (isTaskValid) {
+        index = _.findIndex(state.toDoList, ["id", state.editTaskId]);
+        state.toDoList[index] = { ...state.toDoTask };
+        state.toDoTask = { ...initialToDoTask };
+        state.errInputList = _.cloneDeep(initialInputErrList);
+        state.editTaskId = null;
+        state.modalControl.isNotifyOpened = true;
+        state.isNotifyAnErr = false;
+        state.notifyContent = "Task updated!";
+        return { ...state, toDoList: [...state.toDoList] };
+      }
+      state.modalControl.isNotifyOpened = true;
+      state.isNotifyAnErr = true;
+      state.notifyContent = "Please check the Error Message";
+      return { ...state, errInputList: { ...state.errInputList } };
+
+    //START TOGGING the Confirm Form when click the Remove Button (of each Task) in Task List
     case REMOVE_CONFIRM:
-      state.isConfirmFormOpened = true;
+      state.modalControl.isConfirmFormOpened = true;
       state.removeTaskId = payload;
       return { ...state };
+
+    // START CLOSING the above Confirm Form (for removing task)
     case CLOSE_CONFIRM_FORM:
-      return { ...state, isConfirmFormOpened: false };
+      state.modalControl.isConfirmFormOpened = false;
+      return { ...state };
+
+    // START REMOVING task from Task List
     case REMOVE_TASK:
       index = _.findIndex(state.toDoList, ["id", state.removeTaskId]);
       state.toDoList.splice(index, 1);
-      state.isNotifyOpened = true;
+      state.modalControl.isNotifyOpened = true;
+      state.isNotifyAnErr = false;
       state.notifyContent = "Task removed!";
-      state.isConfirmFormOpened = false;
+      state.modalControl.isConfirmFormOpened = false;
       return { ...state, toDoList: [...state.toDoList] };
+
+    // START GET the Input value of Search Input in ToDoList
     case GET_INPUT_SEARCH:
       return { ...state, searchText: payload };
+
+    // START FILTERING the Task List as per condition from Input Search
     case SEARCH_TASK:
-      // state.searchList = _.filter(state.toDoList, (task) => {
-      //   let index = task.toDo
-      //     .toLowerCase()
-      //     .indexOf(state.searchText.toLowerCase());
-      //   return index !== -1;
-      // });
-      state.isSearchOn = true;
+      state.modalControl.isSearchOn = true;
       state.searchKey = state.searchText;
       return { ...state };
+
+    // START RESET search filtering, no more Task List Filtering
     case RESET_SEARCH:
-      state.isSearchOn = false;
+      state.modalControl.isSearchOn = false;
       state.searchText = "";
+      state.modalControl.isNotifyOpened = true;
+      state.isNotifyAnErr = false;
+      state.notifyContent = "Search Reset";
       return { ...state };
+
+    // START CLOSING Notification Form
     case CLOSE_NOTIFY:
-      return { ...state, isNotifyOpened: false };
+      state.modalControl.isNotifyOpened = false;
+      return { ...state };
+
     default:
       return state;
   }

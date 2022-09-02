@@ -11,17 +11,24 @@ class NotifyForm extends Component {
     }, 3000);
   }
   render() {
-    // if (this.props.isNotifyOpened)
     return (
       <>
-        <NotifyDiv>
-          <AwesomeI
-            className="fa-regular fa-circle-check"
-            margin="0 0 10px 0"
-            bgColor={Color.gray800op70}
-            textColor={Color.green500}
-            fontSize="2rem"
-          ></AwesomeI>
+        <NotifyDiv borderRadius="8px">
+          {this.props.isNotifyAnErr ? (
+            <AwesomeI
+              className="fa-regular fa-circle-xmark"
+              margin="0 0 10px 0"
+              textColor="red"
+              fontSize="2rem"
+            ></AwesomeI>
+          ) : (
+            <AwesomeI
+              className="fa-regular fa-circle-check"
+              margin="0 0 10px 0"
+              textColor={Color.green500}
+              fontSize="2rem"
+            ></AwesomeI>
+          )}
           <p style={{ fontSize: "1.2rem" }}>{this.props.notifyContent}</p>
         </NotifyDiv>
         <BackDrop
@@ -38,8 +45,8 @@ class NotifyForm extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  // isNotifyOpened: state.toDoListReducer.isNotifyOpened,
   notifyContent: state.toDoListReducer.notifyContent,
+  isNotifyAnErr: state.toDoListReducer.isNotifyAnErr,
 });
 
 const mapDispatchToProps = (dispatch) => {
