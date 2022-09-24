@@ -56,7 +56,7 @@ const toDoListReducer = (state = initialState, { type, payload }) => {
       state.toDoTask = { ...state.toDoTask, [name]: value };
       return { ...state };
 
-    // START ADDING task from Input From to Task List
+    // START ADDING task from Input From to Task List;
     case ADD_TASK:
       _.forEach(state.errInputList, (value, key) => {
         // CHECK the validity of each Input field (of Adding/Updating Task Form)
